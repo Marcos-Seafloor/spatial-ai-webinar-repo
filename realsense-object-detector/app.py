@@ -1,11 +1,14 @@
 import time
 import edgeiq
 import numpy as np
+from pymavlink import mavutil
 """
 Using the RealSense camera to do object detection and find the distances from the camera
 to the detected objects
 """
-
+# Create the connection
+# Need to provide the serial port and baudrate
+master = mavutil.mavlink_connection("/dev/ttyTHS1", baud=115200)
 
 def main():
     obj_detect = edgeiq.ObjectDetection(
@@ -27,6 +30,10 @@ def main():
 
             # loop detection
             while True:
+                try:
+            	      print(master.recv_match().to_dict())
+                except:
+                     pass
                 distances = []
                 depth_image, color_image = video_stream.read()
 
